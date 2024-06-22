@@ -46,7 +46,7 @@ function MainPage() {
             {legendary.map((pokemon, index) => (
                 <div key={index} className='flex flex-col items-center relative w-fit' onClick={() => onAvatarClick(pokemon.names.English)}>
                     <img src={pokemon.assets.image} alt="pokemon-image" className='rounded-full bg-sky-200 border-4 border-grey-200 w-48 h-48' />
-                    <img src={pokemon.assets.shinyImage} alt="pokemon-image-shiny" className={pokemon.isShiny ? 'opacity-0' : 'opacity-100 absolute top-0 -right-10 w-24 h-24 rounded-full bg-sky-100 border-2 border-grey-200'}  />
+                    <img src={pokemon.assets.shinyImage} alt="pokemon-image-shiny"        />
                     <h1>{pokemon.names.English}</h1>
                 </div>
             ))}

@@ -20,7 +20,10 @@ function ModalPage() {
                     const megaName = name.substring(5).toUpperCase();
                     if (megaName === 'CHARIZARD Y' || megaName === 'CHARIZARD X') {
                         fetchName = 'CHARIZARD';
-                    } else {
+                    } else if (megaName === 'MEWTWO Y' || megaName === 'MEWTWO X') {
+                        fetchName = 'MEWTWO';
+                    }
+                    else {
                         fetchName = megaName;
                     }
                 }
@@ -46,7 +49,12 @@ function ModalPage() {
             else if (megaName === 'CHARIZARD X') {
                 return receivedPokemon.megaEvolutions?.[`CHARIZARD_MEGA_X`]?.assets?.image;
             }
-            return receivedPokemon.megaEvolutions?.[`${megaName}_MEGA`]?.assets?.image;
+            else if (megaName === 'MEWTWO Y') {
+                return receivedPokemon.megaEvolutions?.[`MEWTWO_MEGA_Y`]?.assets?.image;
+            }
+            else if (megaName === 'MEWTWO X') {
+                return receivedPokemon.megaEvolutions?.[`MEWTWO_MEGA_X`]?.assets?.image;
+            }
         }
         return receivedPokemon.assets?.image;
     };
@@ -59,6 +67,12 @@ function ModalPage() {
             }
             else if (megaName === 'CHARIZARD X') {
                 return receivedPokemon.megaEvolutions?.[`CHARIZARD_MEGA_X`]?.assets?.shinyImage;
+            }
+            else if (megaName === 'MEWTWO Y') {
+                return receivedPokemon.megaEvolutions?.[`MEWTWO_MEGA_Y`]?.assets?.shinyImage;
+            }
+            else if (megaName === 'MEWTWO X') {
+                return receivedPokemon.megaEvolutions?.[`MEWTWO_MEGA_X`]?.assets?.shinyImage;
             }
             return receivedPokemon.megaEvolutions?.[`${megaName}_MEGA`]?.assets?.shinyImage;
         }
@@ -137,7 +151,6 @@ function ModalPage() {
                             <option value="cloudy">Cloudy</option>
                             <option value="windy">Windy</option>
                         </select>
-                        <h1>{weather}</h1>
                     </div>
                     <div>
                         <h1>Active mega: </h1>
@@ -150,12 +163,13 @@ function ModalPage() {
                 </form>
             </div>
             <div className='flex flex-col items-center justify-center gap-20'>
-                <PokemonSelector name={upperCaseName} />
-                <PokemonSelector name={upperCaseName} />
-                <PokemonSelector name={upperCaseName} />
-                <PokemonSelector name={upperCaseName} />
-                <PokemonSelector name={upperCaseName} />
-                <PokemonSelector name={upperCaseName} />
+                <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
+                <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
+                <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
+                <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
+                <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
+                <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
+
             </div>
         </div>
     );
