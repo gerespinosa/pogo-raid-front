@@ -130,8 +130,13 @@ function PokemonSelector() {
     }, [teamMember, quickAttack, chargedAttack, secondChargedAttack]);
 
     return (
-        <div className='flex items-center justify-center w-full min-h-72 bg-blue-200'>
-            <div className='flex flex-col w-1/2 justify-center '>
+        <div className='flex w-full min-h-72 bg-slate-400 p-6' >
+            {/* This is the pokemon container  */}
+            <div className='flex flex-col w-full justify-center '> 
+                {/* This is the main container */}
+                <div className='flex w-full justify-start align-middle gap-4'>
+                    {/* This is the pokemon image container and the search bar */}
+                    <div className='flex flex-col gap-2 w-1/6'>
                 <form className='flex w-full' onSubmit={onSearch}>
                     <input 
                         type="search" 
@@ -147,21 +152,25 @@ function PokemonSelector() {
                         ))}
                     </datalist>
                 </form>
-                <div className='flex w-full bg-green-200 justify-between gap-4'>
                     {teamMember && <img src={teamMember.assets.image} alt={teamMember.names.English} className='min-w-24 min-h-24' />}
-                    <div className='flex flex-col gap-2 w-1/4'>
+
+                    </div>
+                    {/* This is the IVs and CP */}
+                    <div className='flex flex-col gap-2 w-1/6'>
                         <IVsSlider 
+                            attackIVs={attackIVs}
+                            defenseIVs={defenseIVs}
+                            hpIVs={hpIVs}
                             setAttackIVs={setAttackIVs}
                             setDefenseIVs={setDefenseIVs}
                             setHpIVs={setHpIVs}
                         />
                         <CPMSlider setCpm={setCpm} />
+                        <h1 className='text-3xl'>CP: {pokemonCP}</h1>
                     </div>
+                    {/* This is the quick attack, charged attack, and second attack select boxes */}
                     <div className='flex flex-col w-1/4'>
-                        <h1>CP: {pokemonCP}</h1>
-                        <div className='flex'>
-                            <Switch checked={secondAttack} onChange={handleSwitchChange} />
-                        </div>
+                        <div>
                         <select name="quickA" id="quick-attack" className='w-full' onChange={(event) => {
                             const selectedMove = JSON.parse(event.target.value);
                             console.log('Selected Quick Move:', selectedMove);
@@ -169,21 +178,39 @@ function PokemonSelector() {
                         }}>
                             {quickA.map((move, index) => (
                                 <option key={index} value={JSON.stringify(move)}>
-                                    {`${move.names.English} (${move.type.names.English}) (${move.type.names.English === teamMember?.primaryType?.names.English ? parseFloat((move.power * 1.20).toFixed(2)) : move.power}) (${move.energy}) (${parseFloat((move.durationMs / 1000).toFixed(2))}s)`}
+                                    {`${move.names.English} (${move.type.names.English})`}
                                 </option>
                             ))}
                         </select>
-                        <select name="chargedA" id="charged-attack" className='w-full' onChange={(event) => {
+                            <div className='flex gap-4 justify-between'>
+                                <h1>{quickAttack ? `Power: ${quickAttack.power}` : `Power: 0`}</h1>
+                                <h1>{quickAttack ? `Energy: ${quickAttack.energy}` : `Energy: 0`}</h1>
+                                <h1>{quickAttack ? `Duration: ${quickAttack.durationMs / 1000}s` : `Duration: 0s`}</h1>
+                            </div>
+                        </div>
+                        <div>
+                            <select name="chargedA" id="charged-attack" className='w-full' onChange={(event) => {
                             const selectedMove = JSON.parse(event.target.value);
                             console.log('Selected Charged Move:', selectedMove);
                             setChargedAttack(selectedMove);
-                        }}>
+                            }}>
                             {chargedA.map((move, index) => (
                                 <option key={index} value={JSON.stringify(move)}>
-                                    {`${move.names.English} (${move.type.names.English}) (${move.type.names.English === teamMember?.primaryType?.names.English ? parseFloat((move.power * 1.20).toFixed(2)) : move.power}) (${move.energy}) (${parseFloat((move.durationMs / 1000).toFixed(2))}s)`}
+                                    {`${move.names.English} (${move.type.names.English})`}
                                 </option>
                             ))}
-                        </select>
+                            </select>
+                            <div className='flex gap-4 justify-between'>
+                                <h1>{chargedAttack ? `Power: ${chargedAttack.power}` : `Power: 0`}</h1>
+                                <h1>{chargedAttack ? `Energy: ${chargedAttack.energy}` : `Energy: 0`}</h1>
+                                <h1>{chargedAttack ? `Duration: ${chargedAttack.durationMs / 1000}s` : `Duration: 0s`}</h1>
+                            </div>
+                        </div>
+                        <div className='flex justify-center place-items-center'>
+                            <h1>2nd charged attack</h1> 
+                            <Switch checked={secondAttack} onChange={handleSwitchChange} />
+                        </div>
+                        <div>
                         {secondAttack && (
                             <select name="secondChargedA" id="second-charged-attack" className='w-full' onChange={(event) => {
                                 const selectedMove = JSON.parse(event.target.value);
@@ -191,12 +218,19 @@ function PokemonSelector() {
                                 setSecondChargedAttack(selectedMove);
                             }}>
                                 {chargedA.map((move, index) => (
-                                    <option key={index} value={JSON.stringify(move)}>
-                                        {`${move.names.English} (${move.type.names.English}) (${move.type.names.English === teamMember?.primaryType?.names.English ? parseFloat((move.power * 1.20).toFixed(2)) : move.power}) (${move.energy}) (${parseFloat((move.durationMs / 1000).toFixed(2))}s)`}
-                                    </option>
-                                ))}
+                                <option key={index} value={JSON.stringify(move)}>
+                                    {`${move.names.English} (${move.type.names.English})`}
+                                </option>
+                            ))}
                             </select>
                         )}
+                            <div className='flex gap-4 justify-between'>
+                                <h1>{secondChargedAttack ? `Power: ${secondChargedAttack.power}` : `Power: 0`}</h1>
+                                <h1>{secondChargedAttack ? `Energy: ${secondChargedAttack.energy}` : `Energy: 0`}</h1>
+                                <h1>{secondChargedAttack ? `Duration: ${secondChargedAttack.durationMs / 1000}s` : `Duration: 0s`}</h1>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>

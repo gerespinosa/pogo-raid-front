@@ -120,10 +120,10 @@ function ModalPage() {
         }
     };
 
-    const handleChange = (e) => {
-        e.preventDefault();
-        const weatherValue = e.target.weatherCondition.value;
-        const megaValue = e.target.activeMega.value;
+    const handleChange = (event) => {
+        event.preventDefault();
+        const weatherValue = event.target.weatherCondition.value;
+        const megaValue = event.target.activeMega.value;
 
         getWeather(weatherValue);
         setActiveMega(megaValue);
@@ -131,7 +131,7 @@ function ModalPage() {
 
     return (
         <div>
-            <div className='flex flex-col items-center justify-center p-4 w-full' style={{ backgroundImage: `url(${weatherURL})`, backgroundSize: 'cover' }}> 
+            <div className='flex flex-col items-center justify-center p-4 w-full'> 
             <div className='flex flex-col items-center relative w-fit justify-center'>
                 <img src={getImage()} alt="pokemon" className='rounded-full bg-sky-200 border-4 border-grey-200 w-48 h-48' />
                 <img src={getShinyImage()} alt="pokemon" className={receivedPokemon.isShiny ? 'opacity-0' : 'opacity-100 absolute top-0 -right-10 w-24 h-24 rounded-full bg-sky-100 border-2 border-grey-200'} />
@@ -162,14 +162,13 @@ function ModalPage() {
                     <button type="submit">Set</button>
                 </form>
             </div>
-            <div className='flex flex-col items-center justify-center gap-20'>
+            <div className='flex flex-col items-center justify-center gap-20 w-full'>
                 <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
                 <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
                 <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
                 <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
                 <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
                 <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
-
             </div>
         </div>
     );
