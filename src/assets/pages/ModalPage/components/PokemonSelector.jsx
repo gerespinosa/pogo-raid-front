@@ -14,7 +14,13 @@ function PokemonSelector() {
     const [attackIVs, setAttackIVs] = useState(10);
     const [defenseIVs, setDefenseIVs] = useState(10);
     const [hpIVs, setHpIVs] = useState(10);
-    const [cpm, setCpm] = useState(0.7903); // default for level 40
+    const [cpm, setCpm] = useState(0.7903);
+    const [quickDO, setQuickDO] = useState(0);
+    const [chargedDO, setChargedDO] = useState(0);
+    const [secondChargedDO, set2ndChargedDO] = useState(0);
+    const [quickAttack, setQuickAttack] = useState(null);
+    const [chargedAttack, setChargedAttack] = useState(null);
+    const [secondChargedAttack, setSecondChargedAttack] = useState(null);
 
     const onSearch = (e) => {
         e.preventDefault();
@@ -94,6 +100,35 @@ function PokemonSelector() {
         }
     }, [attackIVs, defenseIVs, hpIVs, cpm, teamMember]);
 
+    const getSTABBonus = (teamMember, quickAttack, chargedAttack, secondChargedAttack) => {
+        if (quickAttack) {
+            console.log(quickAttack.power);
+        }
+        if (chargedAttack) {
+            console.log(chargedAttack.power);
+        }
+        if (secondChargedAttack) {
+            console.log(secondChargedAttack.power);
+        }
+
+        if (teamMember?.primaryType?.names.English === quickAttack?.type?.names.English || teamMember?.secondaryType?.names.English === quickAttack?.type?.names.English) {
+            // setQuickDO(quickAttack.power * 1.20)
+        } 
+        else if (teamMember?.primaryType?.names.English === chargedAttack?.type?.names.English || teamMember?.secondaryType?.names.English === chargedAttack?.type?.names.English) {
+            // setChargedDO(chargedAttack.power * 1.20)
+        } 
+        else if (secondAttack && (teamMember?.primaryType?.names.English === secondChargedAttack?.type?.names.English || teamMember?.secondaryType?.names.English === secondChargedAttack?.type?.names.English)) {
+            // set2ndChargedDO(secondChargedAttack.power * 1.20)
+        }
+
+        console.log(quickDO, chargedDO, secondChargedDO);
+    };
+
+    useEffect(() => {
+        getSTABBonus(teamMember, quickAttack, chargedAttack, secondChargedAttack);
+        console.log(quickDO, chargedDO, secondChargedDO);
+    }, [teamMember, quickAttack, chargedAttack, secondChargedAttack]);
+
     return (
         <div className='flex items-center justify-center w-full min-h-72 bg-blue-200'>
             <div className='flex flex-col w-1/2 justify-center '>
@@ -112,7 +147,7 @@ function PokemonSelector() {
                         ))}
                     </datalist>
                 </form>
-                <div className='flex w-full gap-2 bg-green-200 justify-start'>
+                <div className='flex w-full bg-green-200 justify-between gap-4'>
                     {teamMember && <img src={teamMember.assets.image} alt={teamMember.names.English} className='min-w-24 min-h-24' />}
                     <div className='flex flex-col gap-2 w-1/4'>
                         <IVsSlider 
@@ -120,55 +155,49 @@ function PokemonSelector() {
                             setDefenseIVs={setDefenseIVs}
                             setHpIVs={setHpIVs}
                         />
-                        <CPMSlider 
-                            attack={teamMember?.stats?.attack || 0} 
-                            defense={teamMember?.stats?.defense || 0} 
-                            stamina={teamMember?.stats?.stamina || 0}
-                            setCpm={setCpm}
-                        />
-                        <h1>CP: {pokemonCP}</h1>
+                        <CPMSlider setCpm={setCpm} />
                     </div>
-                </div>
-                <div className='flex w-full justify-center gap-2 bg-sky-200'>
-                    <h1>{teamMember?.primaryType?.names?.English}</h1>
-                    <h1>{teamMember?.secondaryType?.names?.English}</h1>
-                </div>
-            </div>
-            
-            <div className='flex flex-col w-fit min-w-64 justify-around h-1/2 bg-gray-700'>
-                <select name="quickA" id="quick-attack" className='w-full'>
-                    {quickA.map((move, index) => (
-                        <option key={index} value={move.names.English}>
-                            {move.names.English}
-                        </option>
-                    ))}
-                </select>
-
-                <select name="chargedA" id="charged-attack" className='w-full'>
-                    {chargedA.map((move, index) => (
-                        <option key={index} value={move.names.English}>
-                            {move.names.English}
-                        </option>
-                    ))}
-                </select>
-                <div className='flex w-full gap-2 bg-sky-200 items-center'>
-                    <Switch name="second-attack" id="second-attack" onChange={handleSwitchChange} />
-                    <p>2nd charged attack</p>
-                </div>
-                <select name="chargedA" id="charged-attack" className={secondAttack ? 'w-full' : 'hidden'}>
-                    {chargedA.map((move, index) => (
-                        <option key={index} value={move.names.English}>
-                            {move.names.English}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <h1 className='text-md bg-red-500 rounded-md'>Atk: {teamMember?.stats?.attack}</h1>
-                <h1 className='text-md bg-blue-500 rounded-md'>Def: {teamMember?.stats?.defense}</h1>
-                <h1 className='text-md bg-green-500 rounded-md'>HP: {teamMember?.stats?.stamina}</h1>
-                <div>
-                    <h1>Friendship lvl: </h1>
+                    <div className='flex flex-col w-1/4'>
+                        <h1>CP: {pokemonCP}</h1>
+                        <div className='flex'>
+                            <Switch checked={secondAttack} onChange={handleSwitchChange} />
+                        </div>
+                        <select name="quickA" id="quick-attack" className='w-full' onChange={(event) => {
+                            const selectedMove = JSON.parse(event.target.value);
+                            console.log('Selected Quick Move:', selectedMove);
+                            setQuickAttack(selectedMove);
+                        }}>
+                            {quickA.map((move, index) => (
+                                <option key={index} value={JSON.stringify(move)}>
+                                    {`${move.names.English} (${move.type.names.English}) (${move.type.names.English === teamMember?.primaryType?.names.English ? parseFloat((move.power * 1.20).toFixed(2)) : move.power}) (${move.energy}) (${parseFloat((move.durationMs / 1000).toFixed(2))}s)`}
+                                </option>
+                            ))}
+                        </select>
+                        <select name="chargedA" id="charged-attack" className='w-full' onChange={(event) => {
+                            const selectedMove = JSON.parse(event.target.value);
+                            console.log('Selected Charged Move:', selectedMove);
+                            setChargedAttack(selectedMove);
+                        }}>
+                            {chargedA.map((move, index) => (
+                                <option key={index} value={JSON.stringify(move)}>
+                                    {`${move.names.English} (${move.type.names.English}) (${move.type.names.English === teamMember?.primaryType?.names.English ? parseFloat((move.power * 1.20).toFixed(2)) : move.power}) (${move.energy}) (${parseFloat((move.durationMs / 1000).toFixed(2))}s)`}
+                                </option>
+                            ))}
+                        </select>
+                        {secondAttack && (
+                            <select name="secondChargedA" id="second-charged-attack" className='w-full' onChange={(event) => {
+                                const selectedMove = JSON.parse(event.target.value);
+                                console.log('Selected Second Charged Move:', selectedMove);
+                                setSecondChargedAttack(selectedMove);
+                            }}>
+                                {chargedA.map((move, index) => (
+                                    <option key={index} value={JSON.stringify(move)}>
+                                        {`${move.names.English} (${move.type.names.English}) (${move.type.names.English === teamMember?.primaryType?.names.English ? parseFloat((move.power * 1.20).toFixed(2)) : move.power}) (${move.energy}) (${parseFloat((move.durationMs / 1000).toFixed(2))}s)`}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

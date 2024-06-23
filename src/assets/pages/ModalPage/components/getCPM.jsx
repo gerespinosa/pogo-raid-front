@@ -116,7 +116,7 @@ const CPMSlider = ({ setCpm }) => {
     };
 
     return (
-        <div className='flex w-full gap-4'>
+        <div className='flex w-full gap-4 justify-between'>
             <h2>LVL </h2>
             <Slider
                 defaultValue={40}

@@ -17,7 +17,7 @@ const IVsSlider = ({ setAttackIVs, setDefenseIVs, setHpIVs }) => {
 
     return (
         <div>
-            <div className='flex w-full gap-4'>
+            <div className='flex w-full gap-4 justify-end'>
                 <h2>ATK</h2>
                 <Slider
                     defaultValue={10}
@@ -28,7 +28,7 @@ const IVsSlider = ({ setAttackIVs, setDefenseIVs, setHpIVs }) => {
                     onChange={handleAtkChange}
                 />
             </div>
-            <div className='flex w-full gap-4'>
+            <div className='flex w-full gap-4 justify-end'>
                 <h2>DEF</h2>
                 <Slider
                     defaultValue={10}
@@ -39,7 +39,7 @@ const IVsSlider = ({ setAttackIVs, setDefenseIVs, setHpIVs }) => {
                     onChange={handleDefChange}
                 />
             </div>
-            <div className='flex w-full gap-4'>
+            <div className='flex w-full gap-4 justify-end'>
                 <h2>HP</h2>
                 <Slider
                     defaultValue={10}
