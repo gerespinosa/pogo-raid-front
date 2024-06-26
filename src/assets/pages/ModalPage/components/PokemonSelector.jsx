@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Switch } from '@mui/material';
 import CPMSlider from './getCPM.jsx';
 import IVsSlider from './getIVs.jsx';
+import GetIcons from './getIcons.jsx';
+
 
 function PokemonSelector() {
     const [pokedex, setPokedex] = useState([]);
@@ -130,34 +132,37 @@ function PokemonSelector() {
     }, [teamMember, quickAttack, chargedAttack, secondChargedAttack]);
 
     return (
-        <div className='flex w-full min-h-72 bg-slate-400 p-6' >
-            {/* This is the pokemon container  */}
-            <div className='flex flex-col w-full justify-center '> 
-                {/* This is the main container */}
-                <div className='flex w-full justify-start align-middle gap-4'>
-                    {/* This is the pokemon image container and the search bar */}
-                    <div className='flex flex-col gap-2 w-1/6'>
-                <form className='flex w-full' onSubmit={onSearch}>
-                    <input 
-                        type="search" 
-                        onChange={handleChange} 
-                        placeholder="Search" 
-                        className='border-2 border-grey-200 rounded-md p-2 w-full' 
-                        list='pokedex' 
-                        autoComplete='on' 
-                    />
-                    <datalist id='pokedex'>
-                        {pokedex.map((pokemon, index) => (
-                            <option key={index} value={pokemon.names.English} />
-                        ))}
-                    </datalist>
-                </form>
-                    {teamMember && <img src={teamMember.assets.image} alt={teamMember.names.English} className='min-w-24 min-h-24' />}
-
+        <div className='flex w-full min-h-36 p-2 justify-center'>
+            {/* Main container */}
+            <div className='flex flex-col w-full h-full p-2'>
+                <div className='flex w-full justify-start align-middle gap-4 bg-slate-500'>
+                    {/* Image and searchbar container */}
+                    <div className='flex flex-col w-1/6 relative'>
+                        <form className='flex w-full' onSubmit={onSearch}> 
+                            <input
+                                type="search"
+                                onChange={handleChange}
+                                placeholder="Search"
+                                className='border-2 border-grey-200 rounded-md relative top-2 p-1 bg-inherit text-white bg-slate-700 w-3/4' 
+                                list='pokedex'
+                                autoComplete='on'
+                            />
+                            <datalist id='pokedex'>
+                                {pokedex.map((pokemon, index) => (
+                                    <option key={index} value={pokemon.names.English} />
+                                ))}
+                            </datalist>
+                        </form>
+                        {/* Image */}
+                        <div className='p-1'>
+                        {teamMember && <div className='w-full h-36 border-2 border-grey-200 p-2 rounded-md bg-slate-600' style={{ backgroundImage: `url(${teamMember.assets.image})`, backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />}
+                        </div>
+                        {/* Icons */}
+                        {teamMember && <GetIcons teamMember={teamMember} />}
                     </div>
-                    {/* This is the IVs and CP */}
-                    <div className='flex flex-col gap-2 w-1/6'>
-                        <IVsSlider 
+                    {/* CP and IVs container */}
+                    <div className='flex flex-col justify-center p-1 m-2 w-1/6 bg-slate-600 border-2 border-grey-200 rounded-md'>
+                        <IVsSlider
                             attackIVs={attackIVs}
                             defenseIVs={defenseIVs}
                             hpIVs={hpIVs}
@@ -166,76 +171,92 @@ function PokemonSelector() {
                             setHpIVs={setHpIVs}
                         />
                         <CPMSlider setCpm={setCpm} />
-                        <h1 className='text-3xl'>CP: {pokemonCP}</h1>
+                        <h1 className='text-2xl text-white'>CP: {pokemonCP}</h1>
                     </div>
-                    {/* This is the quick attack, charged attack, and second attack select boxes */}
-                    <div className='flex flex-col w-1/4'>
+                    
+                    {/* Attacks selector */}
+                    <div className='flex flex-col w-fit          p-1 m-2 bg-slate-600 border-2 border-grey-200 rounded-md'>
                         <div>
-                        <select name="quickA" id="quick-attack" className='w-full' onChange={(event) => {
-                            const selectedMove = JSON.parse(event.target.value);
-                            console.log('Selected Quick Move:', selectedMove);
-                            setQuickAttack(selectedMove);
-                        }}>
-                            {quickA.map((move, index) => (
-                                <option key={index} value={JSON.stringify(move)}>
-                                    {`${move.names.English} (${move.type.names.English})`}
-                                </option>
-                            ))}
-                        </select>
+                            <select
+                                name="quickA"
+                                id="quick-attack"
+                                className='w-full bg-slate-700 text-white'
+                                onChange={(event) => {
+                                    const selectedMove = JSON.parse(event.target.value);
+                                    setQuickAttack(selectedMove);
+                                }}
+                            >
+                                {quickA.map((move, index) => (
+                                    <option key={index} value={JSON.stringify(move)}>
+                                        {`${move.names.English} (${move.type.names.English})`}
+                                    </option>
+                                ))}
+                            </select>
+                            {/* Indicates the details for each attack */}
                             <div className='flex gap-4 justify-between'>
-                                <h1>{quickAttack ? `Power: ${quickAttack.power}` : `Power: 0`}</h1>
-                                <h1>{quickAttack ? `Energy: ${quickAttack.energy}` : `Energy: 0`}</h1>
-                                <h1>{quickAttack ? `Duration: ${quickAttack.durationMs / 1000}s` : `Duration: 0s`}</h1>
+                                <h1 className='text-white'>{quickAttack ? `Power: ${quickAttack.power}` : `Power: 0`}</h1>
+                                <h1 className='text-white'>{quickAttack ? `Energy: ${quickAttack.energy}` : `Energy: 0`}</h1>
+                                <h1 className='text-white'>{quickAttack ? `Duration: ${quickAttack.durationMs / 1000}s` : `Duration: 0s`}</h1>
                             </div>
                         </div>
                         <div>
-                            <select name="chargedA" id="charged-attack" className='w-full' onChange={(event) => {
-                            const selectedMove = JSON.parse(event.target.value);
-                            console.log('Selected Charged Move:', selectedMove);
-                            setChargedAttack(selectedMove);
-                            }}>
-                            {chargedA.map((move, index) => (
-                                <option key={index} value={JSON.stringify(move)}>
-                                    {`${move.names.English} (${move.type.names.English})`}
-                                </option>
-                            ))}
+                            <select
+                                name="chargedA"
+                                id="charged-attack"
+                                className='w-full bg-slate-700 text-white'
+                                onChange={(event) => {
+                                    const selectedMove = JSON.parse(event.target.value);
+                                    setChargedAttack(selectedMove);
+                                }}
+                            >
+                                {chargedA.map((move, index) => (
+                                    <option key={index} value={JSON.stringify(move)}>
+                                        {`${move.names.English} (${move.type.names.English})`}
+                                    </option>
+                                ))}
                             </select>
                             <div className='flex gap-4 justify-between'>
-                                <h1>{chargedAttack ? `Power: ${chargedAttack.power}` : `Power: 0`}</h1>
-                                <h1>{chargedAttack ? `Energy: ${chargedAttack.energy}` : `Energy: 0`}</h1>
-                                <h1>{chargedAttack ? `Duration: ${chargedAttack.durationMs / 1000}s` : `Duration: 0s`}</h1>
+                                <h1 className='text-white'>{chargedAttack ? `Power: ${chargedAttack.power}` : `Power: 0`}</h1>
+                                <h1 className='text-white'>{chargedAttack ? `Energy: ${chargedAttack.energy}` : `Energy: 0`}</h1>
+                                <h1 className='text-white'>{chargedAttack ? `Duration: ${chargedAttack.durationMs / 1000}s` : `Duration: 0s`}</h1>
                             </div>
                         </div>
                         <div className='flex justify-center place-items-center'>
-                            <h1>2nd charged attack</h1> 
+                            <h1 className='text-white'>2nd charged attack</h1>
                             <Switch checked={secondAttack} onChange={handleSwitchChange} />
                         </div>
                         <div>
-                        {secondAttack && (
-                            <select name="secondChargedA" id="second-charged-attack" className='w-full' onChange={(event) => {
-                                const selectedMove = JSON.parse(event.target.value);
-                                console.log('Selected Second Charged Move:', selectedMove);
-                                setSecondChargedAttack(selectedMove);
-                            }}>
-                                {chargedA.map((move, index) => (
-                                <option key={index} value={JSON.stringify(move)}>
-                                    {`${move.names.English} (${move.type.names.English})`}
-                                </option>
-                            ))}
-                            </select>
-                        )}
-                            <div className='flex gap-4 justify-between'>
-                                <h1>{secondChargedAttack ? `Power: ${secondChargedAttack.power}` : `Power: 0`}</h1>
-                                <h1>{secondChargedAttack ? `Energy: ${secondChargedAttack.energy}` : `Energy: 0`}</h1>
-                                <h1>{secondChargedAttack ? `Duration: ${secondChargedAttack.durationMs / 1000}s` : `Duration: 0s`}</h1>
-                            </div>
-
+                            {secondAttack && (
+                                <select
+                                    name="secondChargedA"
+                                    id="second-charged-attack"
+                                    className='w-full bg-slate-700 text-white'
+                                    onChange={(event) => {
+                                        const selectedMove = JSON.parse(event.target.value);
+                                        setSecondChargedAttack(selectedMove);
+                                    }}
+                                >
+                                    {chargedA.map((move, index) => (
+                                        <option key={index} value={JSON.stringify(move)}>
+                                            {`${move.names.English} (${move.type.names.English})`}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
+                            {secondAttack && (
+                                <div className='flex gap-4 justify-between'>
+                                    <h1 className='text-white'>{secondChargedAttack ? `Power: ${secondChargedAttack.power}` : `Power: 0`}</h1>
+                                    <h1 className='text-white'>{secondChargedAttack ? `Energy: ${secondChargedAttack.energy}` : `Energy: 0`}</h1>
+                                    <h1 className='text-white'>{secondChargedAttack ? `Duration: ${secondChargedAttack.durationMs / 1000}s` : `Duration: 0s`}</h1>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     );
+    
 }
 
 export default PokemonSelector;

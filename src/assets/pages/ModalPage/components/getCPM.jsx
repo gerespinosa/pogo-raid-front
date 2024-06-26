@@ -116,8 +116,8 @@ const CPMSlider = ({ setCpm }) => {
     };
 
     return (
-        <div className='flex w-full gap-4 justify-between'>
-            <h2 className='font-bold'>LVL:</h2>
+        <div className='flex w-full gap-4 justify-start align-middle'>
+            <h2 className='font-bold text-white'>LVL:</h2>
             <Slider
                 defaultValue={40}
                 aria-label="Default"
@@ -127,8 +127,9 @@ const CPMSlider = ({ setCpm }) => {
                 step={0.5}
                 value={lvl}
                 onChange={handleChange}
-                style={{ width: '100%', maxWidth: '200px' }}
+                style={{ width: '100%', maxWidth: '200px', color: 'lightgray' }}
             />
+            <h2 className='text-white'>{lvl}</h2>
         </div>
     );
 };

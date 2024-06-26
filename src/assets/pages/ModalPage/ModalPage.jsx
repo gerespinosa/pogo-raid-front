@@ -1,6 +1,8 @@
+// src/ModalPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PokemonSelector from './components/PokemonSelector';
+import GetCP from '/src/utils/RaidBossCP.jsx';
 
 function ModalPage() {
     let { name } = useParams();
@@ -8,9 +10,10 @@ function ModalPage() {
 
     const [receivedPokemon, setReceivedPokemon] = useState({});
     const [weather, setWeather] = useState(null);
-    const [weatherURL, setWeatherURL] = useState('');
-    const [boostedTypes, setBoostedTypes] = useState([]);
+    const [weatherURL, setWeatherURL] = useState("https://christiancountynow.sagacom.com/files/2023/09/Mostly-sunny-1200-2023-1200x768.jpg");
+    const [boostedTypes, setBoostedTypes] = useState(["grass", "fire", "ground"]);
     const [activeMega, setActiveMega] = useState('no');
+    const [CP, setCP] = useState(0);
 
     useEffect(() => {
         async function setPokemon() {
@@ -22,8 +25,7 @@ function ModalPage() {
                         fetchName = 'CHARIZARD';
                     } else if (megaName === 'MEWTWO Y' || megaName === 'MEWTWO X') {
                         fetchName = 'MEWTWO';
-                    }
-                    else {
+                    } else {
                         fetchName = megaName;
                     }
                 }
@@ -35,24 +37,20 @@ function ModalPage() {
                 console.log(error);
             }
         }
-    
+
         setPokemon();
     }, [upperCaseName, name]);
-    
 
     const getImage = () => {
         if (name.startsWith('Mega')) {
             const megaName = name.substring(5).toUpperCase();
             if (megaName === 'CHARIZARD Y') {
                 return receivedPokemon.megaEvolutions?.[`CHARIZARD_MEGA_Y`]?.assets?.image;
-            }
-            else if (megaName === 'CHARIZARD X') {
+            } else if (megaName === 'CHARIZARD X') {
                 return receivedPokemon.megaEvolutions?.[`CHARIZARD_MEGA_X`]?.assets?.image;
-            }
-            else if (megaName === 'MEWTWO Y') {
+            } else if (megaName === 'MEWTWO Y') {
                 return receivedPokemon.megaEvolutions?.[`MEWTWO_MEGA_Y`]?.assets?.image;
-            }
-            else if (megaName === 'MEWTWO X') {
+            } else if (megaName === 'MEWTWO X') {
                 return receivedPokemon.megaEvolutions?.[`MEWTWO_MEGA_X`]?.assets?.image;
             }
         }
@@ -64,14 +62,11 @@ function ModalPage() {
             const megaName = name.substring(5).toUpperCase();
             if (megaName === 'CHARIZARD Y') {
                 return receivedPokemon.megaEvolutions?.[`CHARIZARD_MEGA_Y`]?.assets?.shinyImage;
-            }
-            else if (megaName === 'CHARIZARD X') {
+            } else if (megaName === 'CHARIZARD X') {
                 return receivedPokemon.megaEvolutions?.[`CHARIZARD_MEGA_X`]?.assets?.shinyImage;
-            }
-            else if (megaName === 'MEWTWO Y') {
+            } else if (megaName === 'MEWTWO Y') {
                 return receivedPokemon.megaEvolutions?.[`MEWTWO_MEGA_Y`]?.assets?.shinyImage;
-            }
-            else if (megaName === 'MEWTWO X') {
+            } else if (megaName === 'MEWTWO X') {
                 return receivedPokemon.megaEvolutions?.[`MEWTWO_MEGA_X`]?.assets?.shinyImage;
             }
             return receivedPokemon.megaEvolutions?.[`${megaName}_MEGA`]?.assets?.shinyImage;
@@ -89,22 +84,22 @@ function ModalPage() {
             case "rainy":
                 setBoostedTypes(["water", "electric", "bug"]);
                 setWeather("Rainy");
-                setWeatherURL("https://centralca.cdn-anvilcms.net/media/images/2019/01/02/images/Rainy_Weather_pix.max-1200x675.jpg")
+                setWeatherURL("https://centralca.cdn-anvilcms.net/media/images/2019/01/02/images/Rainy_Weather_pix.max-1200x675.jpg");
                 return;
             case "snowy":
                 setBoostedTypes(["ice", "steel"]);
                 setWeather("Snow");
-                setWeatherURL("https://st2.depositphotos.com/1363168/9872/i/950/depositphotos_98723840-stock-photo-winter-background-with-snowy-weather.jpg")
+                setWeatherURL("https://st2.depositphotos.com/1363168/9872/i/950/depositphotos_98723840-stock-photo-winter-background-with-snowy-weather.jpg");
                 return;
             case "fog":
                 setBoostedTypes(["dark", "ghost"]);
                 setWeather("Fog");
-                setWeatherURL("https://wpcdn.us-east-1.vip.tn-cloud.net/www.wmdt.com/content/uploads/2021/01/fog-1.jpg")
+                setWeatherURL("https://wpcdn.us-east-1.vip.tn-cloud.net/www.wmdt.com/content/uploads/2021/01/fog-1.jpg");
                 return;
             case "partlycloudy":
                 setBoostedTypes(["normal", "rock"]);
                 setWeather("Partly Cloudy");
-                setWeatherURL("https://images2.minutemediacdn.com/image/upload/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/shape/cover/sport/iStock-104472907-ec1d53a7c5724086414f13ae0dab8e1b.jpg")
+                setWeatherURL("https://images2.minutemediacdn.com/image/upload/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/shape/cover/sport/iStock-104472907-ec1d53a7c5724086414f13ae0dab8e1b.jpg");
                 return;
             case "cloudy":
                 setBoostedTypes(["fairy", "fighting", "poison"]);
@@ -112,7 +107,7 @@ function ModalPage() {
                 setWeatherURL("https://t4.ftcdn.net/jpg/05/19/21/73/360_F_519217384_tFwN8gAbpr4BKegQPiDcGpFp1m9MYzdf.jpg");
                 return;
             case "windy":
-                setBoostedTypes(["flying", "dragon", "psychic"]); 
+                setBoostedTypes(["flying", "dragon", "psychic"]);
                 setWeather("Windy");
                 setWeatherURL("https://media.nbcmiami.com/2022/04/GettyImages-523709228-1-e1702663994367.jpg");
                 return;
@@ -131,14 +126,15 @@ function ModalPage() {
 
     return (
         <div>
-            <div className='flex flex-col items-center justify-center p-4 w-full'> 
-            <div className='flex flex-col items-center relative w-fit justify-center'>
-                <img src={getImage()} alt="pokemon" className='rounded-full bg-sky-200 border-4 border-grey-200 w-48 h-48' />
-                <img src={getShinyImage()} alt="pokemon" className={receivedPokemon.isShiny ? 'opacity-0' : 'opacity-100 absolute top-0 -right-10 w-24 h-24 rounded-full bg-sky-100 border-2 border-grey-200'} />
+            <div className='flex flex-col items-center justify-center p-4 w-full' style={{ backgroundImage: `url(${weatherURL})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                <div className='flex flex-col items-center relative w-fit justify-center'>
+                    <div style={{ backgroundImage: `url(${getImage()})`, backgroundSize: 'cover', backgroundPosition: 'center' }} className='rounded-full bg-sky-200 border-4 border-grey-200 w-48 h-48 cursor-pointer' />
+                    <div style={{ backgroundImage: `url(${getShinyImage()})`, backgroundSize: 'cover', backgroundPosition: 'center' }} className={receivedPokemon.isShiny ? 'opacity-0' : 'opacity-100 absolute top-0 -right-10 w-24 h-24 rounded-full bg-sky-100 border-2 border-grey-200 cursor-pointer'} />
+                </div>
+                <h1 className='text-3xl'>{name}</h1>
+                <GetCP receivedPokemon={receivedPokemon} />
             </div>
-            <h1 className='text-3xl'>{name}</h1>
-            </div>
-            <div className='flex items-center justify-center gap-20 bg-yellow-500'>
+            <div className='flex items-center justify-center gap-16 bg-yellow-500'>
                 <form className='flex gap-20' onSubmit={handleChange} >
                     <div>
                         <h1>Weather condition: </h1>
@@ -162,7 +158,7 @@ function ModalPage() {
                     <button type="submit">Set</button>
                 </form>
             </div>
-            <div className='flex flex-col items-center justify-center gap-20 w-full'>
+            <div className='flex flex-col items-center justify-center w-full' style={{ backgroundImage: 'url(https://img.freepik.com/free-photo/digital-art-beautiful-mountains_23-2151123469.jpg?t=st=1719188958~exp=1719192558~hmac=a54c255638858e232fa6ea2bbe86a365f07b89774863a654ee0c66d284cbacf7&w=1060)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed' }}>
                 <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
                 <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
                 <PokemonSelector name={upperCaseName} activeMega={activeMega} weather={weather} />
